@@ -1,0 +1,514 @@
+<html>
+<head>
+    <title>Orbita Bot Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    
+    <style>
+        #chatWindow .incoming{
+            display: none;
+        }
+        #chatWindow .incoming:last-of-type {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .bubble > p {
+            display: none;
+        }
+        
+        #chatWindow.chat-container.active{
+            background: linear-gradient(180deg, #016996 0%, #22ACDD 100%) !important;
+        }
+        
+        #chatWindow #messages{
+            /*background: linear-gradient(180deg, #016996 0%, #22ACDD 100%) !important;*/
+            /*opacity: 1 !important;*/
+            padding: 0 !important;
+            background: none !important;
+        }
+        
+        #chatWindow .top-bar, #chatWindow .top-bar .top-bar-container{
+            background: none !important;
+        }
+        
+        #chatWindow .top-bar{
+            height: 40px !important;
+        }
+        
+        .top-bar .menu{
+            position: absolute;
+            right: 1rem;
+        }
+        
+        #chatWindow.chat-container.active {
+            height: 590px;
+        }
+        
+        body  {
+            background-image: url("https://pzewsanpdigitaltrans001.blob.core.windows.net/common-static-contents/SurveyBackground.png");
+            background-size: contain;
+        }
+        
+        /*#chatWindow .incoming .bubble p{*/
+        /*    display: none !important;*/
+        /*}*/
+        
+        #chatWindow #messages .incoming:last-child .bubble:last-of-type::before{
+            display: none !important;
+        }
+        
+        #chatWindow ul.btnList {
+            align-content: center !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+        }
+        ::placeholder {
+            font-family: Roboto;
+            font-style: italic;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 16px;
+            font-weight: 400 !important;
+            color: #FFFFFF;
+        }
+        
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+            font-family: Roboto;
+            font-style: italic;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 16px;
+            font-weight: 400 !important;
+            color: #FFFFFF;
+        }
+        
+        ::-ms-input-placeholder { /* Microsoft Edge */
+            font-family: Roboto;
+            font-style: italic;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 16px;
+            font-weight: 400 !important;
+            color: #FFFFFF;
+        }
+        
+        .top-bar .avatar, .top-bar .name, .top-bar .speaker, .bottom-bar {
+            display: none !important;
+        }
+        
+        #chatWindow .outgoing {
+            display: none !important;
+        }
+        
+        @font-face {
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Roboto'), url('https://fonts.cdnfonts.com/s/12165/Roboto-Regular.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto';
+            font-style: italic;
+            font-weight: 400;
+            src: local('Roboto'), url('https://fonts.cdnfonts.com/s/12165/Roboto-Italic.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Roboto'), url('https://fonts.cdnfonts.com/s/12165/Roboto-Bold.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto';
+            font-style: italic;
+            font-weight: 700;
+            src: local('Roboto'), url('https://fonts.cdnfonts.com/s/12165/Roboto-BoldItalic.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Thin';
+            font-style: normal;
+            font-weight: 250;
+            src: local('Roboto Thin'), url('https://fonts.cdnfonts.com/s/12165/Roboto-Thin.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Thin';
+            font-style: italic;
+            font-weight: 250;
+            src: local('Roboto Thin'), url('https://fonts.cdnfonts.com/s/12165/Roboto-ThinItalic.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Light';
+            font-style: normal;
+            font-weight: 300;
+            src: local('Roboto Light'), url('https://fonts.cdnfonts.com/s/12165/Roboto-Light.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Light';
+            font-style: italic;
+            font-weight: 300;
+            src: local('Roboto Light'), url('https://fonts.cdnfonts.com/s/12165/Roboto-LightItalic.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Medium';
+            font-style: normal;
+            font-weight: 500;
+            src: local('Roboto Medium'), url('https://fonts.cdnfonts.com/s/12165/Roboto-Medium.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Medium';
+            font-style: italic;
+            font-weight: 500;
+            src: local('Roboto Medium'), url('https://fonts.cdnfonts.com/s/12165/Roboto-MediumItalic.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Black';
+            font-style: normal;
+            font-weight: 900;
+            src: local('Roboto Black'), url('https://fonts.cdnfonts.com/s/12165/Roboto-Black.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'Roboto Black';
+            font-style: italic;
+            font-weight: 900;
+            src: local('Roboto Black'), url('https://fonts.cdnfonts.com/s/12165/Roboto-BlackItalic.woff') format('woff');
+        }
+
+
+        #chatWindow .incoming .bubble{
+            color: #FFFFFF !important;
+            background: none !important;
+        }
+        #chatWindow .incoming .bubble p {
+            color: inherit !important;
+        }
+        #first_card_directive, 
+        #second_card_directive, 
+        #detailXP_card_directive,
+        #app_feedback_card_directive,
+        #final_card_directive{
+            position: relative;
+            width: 280px;
+            /*height: 540px;*/
+            /*background: linear-gradient(180deg, #016996 0%, #22ACDD 100%);*/
+        }
+        .survey-card-header{
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 30px;
+            line-height: 35px;
+            position: relative;
+            width: 248px;
+            height: 140px;
+            left: 0;
+            top: 25px;
+        }
+        .survey-card-body {
+            font-size: 10px !important;
+            position: absolute;
+            width: 248px;
+            height: 168px;
+            left: 16px;
+            top: 240px;
+        }
+        
+        #chatWindow li, #chatWindow ol, #chatWindow ul {
+            font-size: inherit !important;
+        }
+        
+        /*#chatWindow ul.btnList {*/
+        /*    align-items: flex-start !important;*/
+        /*}*/
+        .reaction-svg{
+            cursor: pointer;
+            pointer-events: none;
+        }
+        
+        .reaction-svg-clicked{
+            display: none;
+            pointer-events: none;
+        }
+        
+        .reactionList {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .reactionList div{
+            cursor: pointer;
+        }
+        
+        .reaction-message, .feedback-block{
+            display: none;
+        }
+        
+        .survey-card-title {
+            position: relative;
+            padding-left: 0;
+            padding-top: 24px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 19px;
+            color: #FFFFFF;
+        }
+        
+        .survey-card-2-body, .detailXP-card{
+            padding-top: 30px;
+        }
+        
+        .survey-card-2-body, .detailXP-card{
+            position: relative;
+            width: 100%;
+            /*padding: 1rem;*/
+        }
+        
+        .body-description {
+            position: relative;
+            padding-top: 30px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 19px;
+            color: #FFFFFF;
+        }
+        
+        #second_card_directive .survey-card-2-body textarea.feedback-area{
+            height: 10rem !important;
+        }
+        textarea.feedback-area {
+            background: rgba(255, 255, 255, 0.32);
+            width: 100%;
+            height: 6rem !important;
+            border-radius: 10px;
+            border: 0;
+            background-color: rgba(255, 255, 255, 0.33);
+            color: white;
+            font-weight: 400;
+            font-family: "Roboto", sans-serif !important;
+            padding: 1rem;
+            font-size: 12px !important;
+            resize: none !important;
+        }
+        
+        .textarea.feedback-area:focus, textarea.feedback-area:focus-visible {
+            outline: 1px solid white;
+        }
+        
+        .details-container textarea.feedback-area{
+            background: none !important;
+            padding: 0;
+            border-radius: 0;
+        }
+        
+        .feedback-block {
+            padding-top: 20px;
+        }
+        
+        .details-container .body-content {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #D8EAF2;
+            box-sizing: border-box;
+            border-radius: 6px;
+            padding: 1rem;
+        }
+        
+        .details-container .body-description {
+            padding: 0 !important;
+            font-size: 14px;
+            line-height: 16px;
+        }
+        
+        #detailXP_card_directive .details-container .reactionList {
+            margin-top: 1rem;
+        }
+        
+        .details-container hr {
+            border: 0.5px solid white !important;
+            opacity: 1 !important;
+        }
+        
+        #detailXP_card_directive::-webkit-scrollbar,
+        #app_feedback_card_directive::-webkit-scrollbar { 
+            width: 0 !important;
+        }
+        
+        #detailXP_card_directive,
+        #app_feedback_card_directive { 
+            overflow: -moz-scrollbars-none; 
+            overflow: scroll;
+        }
+        
+        #detailXP_card_directive,
+        #app_feedback_card_directive { 
+            -ms-overflow-style: none; 
+        }
+        
+        #detailXP_card_directive textarea.feedback-area:focus, 
+        #detailXP_card_directive textarea.feedback-area:focus-visible,
+        #app_feedback_card_directive textarea.feedback-area:focus, 
+        #app_feedback_card_directive textarea.feedback-area:focus-visible{
+            outline: none;
+        }
+        
+        .app-feedback-card{
+            padding-top: 1rem;
+        }
+        
+        .app-feedback-card .reaction-svg,
+        .app-feedback-card .reaction-svg-clicked{
+            height: 18px;
+            width: 18px;
+            object-fit: contain;
+        }
+        
+        .app-feedback-card .body-content{
+            padding: 0;
+        }
+        
+        .app-top {
+            display: flex;
+            flex-flow: row nowrap;
+        }
+        
+        .app-left {
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 33%;
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: center;
+            border-radius: 7px 0 0 7px;
+            padding: 1rem 0.25rem 0.25rem 0.25rem;
+        }
+        
+        .app-right {
+            width: 67%;
+            border-radius: 0 7px 7px 0;
+            padding: 1rem 1rem 0.75rem 1rem;
+        }
+        
+        .app-feedback-card .feedback-block{
+            padding-top: 0;
+        }
+        
+        .app-feedback-card .feedback-block hr{
+            margin: 0;
+            height: 0.5px;
+            margin-bottom: 1rem;
+            border: none;
+        }
+        
+        .app-feedback-card .feedback-area{
+            padding: 0 0.5rem 0.5rem !important;
+        }
+        .app-left span{
+            color: #3788bf;
+            font-size: 0.66rem;
+            font-weight: 400;
+            display: block;
+            text-align: center;
+            margin-top: 0.33rem;
+        }
+        
+        .app-left img {
+            height: 2rem;
+            object-fit: contain;
+            width: 100%;
+            margin-bottom: 0.25rem;
+        }
+        
+        #final_card_directive .survey-card-body{
+            top: 200px !important;
+            left: 0 !important;
+        }
+        
+        div#chatWindow #messages .incoming .btnList{
+            /*top: calc(540px - 1rem);*/
+            position: fixed;
+            bottom: 1rem;
+        }
+        
+        div#chatWindow #messages .incoming .btnList .smrtBtn {
+            width: calc(280px - 2rem) !important;
+            animation: 2s ease 0s 1 normal none running fadein;
+            background-color: white;
+            border-radius: 999px !important;
+            border: 0;
+            position: sticky;
+            bottom: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #3788bf;
+            text-transform: uppercase;
+            padding: 1rem 0;
+            margin: 1rem 0 3rem;
+            box-shadow: 0px 3px 4px 2px rgb(0 0 0 / 25%);
+            text-align: center;
+        }
+    </style>
+  
+</head>
+<body>
+    <script src="/chatbot/v3/chat.js"></script>
+    <script>
+    OrbitaChatBotV3.init({
+            projectId: '{{projectId}}',
+            serverUrl: '{{req.headers.x-forwarded-proto}}://{{req.headers.host}}',
+            botContainerId: 'chatWindow',
+            botContentId: 'messages',
+            botInputMessageId: 'input',
+            botSendButtonId: 'orbita-send-button',
+            botMicId: 'chatMic',
+            botSpeakerId: 'un-mute',
+            botMenuId: 'chatMenu',
+            botIcon: 'chat-icon',
+            botClose: 'menu',
+            customData: {
+                chooseFlow: ""
+            },
+            botSettings: {    
+                elementId: 'orbitabot',
+                template: 'default'  
+            }
+        });
+        
+        function reactionClicked(event){
+            var reactionClass = $(event.target)[0].classList[0];
+            
+            if($(event.target).find('.reaction-svg-clicked').css('display') === "block"){
+                return;
+            }
+                
+            $(event.target).closest('.reactionList').find('.reaction-svg').css('display', 'block');
+            $(event.target).closest('.reactionList').find('.reaction-svg-clicked').css('display', 'none');
+            $(event.target).find('.reaction-svg').hide();
+            $(event.target).find('.reaction-svg-clicked').css('display', 'block')
+            $(event.target).closest('.body-content').find('.body-description .reaction-message').css('display', 'none');
+            $(event.target).closest('.body-content').find('.body-description .'+ reactionClass).css('display', 'block');
+            $('#second_card_directive').find('.survey-card-title').css('display', 'none');
+            $('#second_card_directive').find('.feedback-block').css('display', 'block');
+        }
+        
+        function detailXPReactionClick(event){
+            console.log($(event.target))
+            var reactionClass = $(event.target)[0].classList[0];
+            
+            if($(event.target).find('.reaction-svg-clicked').css('display') === "block"){
+                return;
+            }
+            
+            $(event.target).closest('.app-top').find('.app-left').css('border-radius', '7px 0 0 0');
+            $(event.target).closest('.reactionList').find('.reaction-svg').css('display', 'block');
+            $(event.target).closest('.reactionList').find('.reaction-svg-clicked').css('display', 'none');
+            $(event.target).find('.reaction-svg').hide();
+            $(event.target).find('.reaction-svg-clicked').css('display', 'block')
+            $(event.target).closest('.body-content').find('.feedback-block').css('display', 'block');
+        }
+    </script>
+</body>
+</html>
